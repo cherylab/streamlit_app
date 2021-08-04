@@ -107,7 +107,7 @@ def create_std_graph(plot_df, mean, up1, down1, up2, down2):
                       font_size=14,
                       showlegend=False,
                       title=dict(font_size=22,
-                                 text="<b>Equity risk premium mainly between 15yr mean and -1 std in recent months</b>",
+                                 text="<b>Equity risk premium mainly between 15yr mean and -1\u03C3 lately</b>",
                                  ),
                       title_x=0.04,
                       title_y=0.95,
@@ -247,7 +247,7 @@ def create_inverse_graph(df_all):
                       font_family="Avenir",
                       font_color="#4c4c4c",
                       title=dict(font_size=22,
-                                 text="<b>Spread between S&P price and P/E ratio is widening</b>",
+                                 text="<b>S&P price and Interest Rate Adjusted P/E ratio</b>",
                                  x=0.04,
                                  y=0.93
                                  ),
