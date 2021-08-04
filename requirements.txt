@@ -20,12 +20,12 @@ click==7.1.2
 click-plugins==1.1.1
 cryptography==3.4.7
 cython==0.29.24
-dash==1.19.0
-dash-auth==1.4.1
+dash
+dash-auth
 dash-core-components
 dash-html-components
 dash-renderer
-dash-table==4.4.1
+dash-table
 decorator==5.0.9
 fiona==1.8.20
 flask==1.1.2
