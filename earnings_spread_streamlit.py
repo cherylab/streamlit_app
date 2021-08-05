@@ -8,6 +8,7 @@ from plotly.graph_objs.scatter.marker import Line
 from plotly.subplots import make_subplots
 import numpy as np
 import plot_settings
+import logins
 from multiapp import MultiApp
 
 st.set_page_config(layout='wide')
@@ -353,20 +354,48 @@ def earnings_recalc():
     st.plotly_chart(updated_figure, use_container_width=True)
 
 # SECOND PAGE
-def something_else():
+def adjuted_pe():
     st.title('S&P Price vs P/E Ratio')
 
     pe_figure = create_inverse_graph(df)
 
     st.plotly_chart(pe_figure, use_container_width=True)
 
+def login_info():
+    with st.form(key='login_info'):
+        st.write('<b>Login</b>', unsafe_allow_html=True)
+        username = st.text_input('Username:',
+                                 value="",
+                                 type='default')
+        password = st.text_input('Password:',
+                                 value="",
+                                 type='password')
+        login_submit_button = st.form_submit_button('Login')
+
+        if (username in logins.login_info.keys()) & (logins.login_info[username]==password):
+            continued = True
+        else:
+            continued = False
+
+    return continued
+
+
+
 def create_app_with_pages():
     # CREATE PAGES IN APP
     app = MultiApp()
-    app.add_app("Earnings Spread Calculation", earnings_recalc)
-    app.add_app("S&P Price vs P/E Ratio", something_else)
+    app.add_app('Login', login_info)
+
+    valid_login = login_info()
+
+    if valid_login:
+        app.add_app("Earnings Spread Calculation", earnings_recalc)
+        app.add_app("S&P Price vs P/E Ratio", adjuted_pe)
+    else:
+        st.warning('Login info is not correct. Please try again.')
 
     app.run()
 
 if __name__ == '__main__':
+
     create_app_with_pages()
