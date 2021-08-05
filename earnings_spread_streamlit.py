@@ -362,7 +362,7 @@ def adjuted_pe():
     st.plotly_chart(pe_figure, use_container_width=True)
 
 def login_info():
-    with st.form(key='login_info'):
+    with st.sidebar.form(key='login_info'):
         st.write('<b>Login</b>', unsafe_allow_html=True)
         username = st.text_input('Username:',
                                  value="",
