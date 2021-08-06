@@ -380,7 +380,7 @@ def login_info(key="login_info_form"):
         login_submit_button = st.form_submit_button('Login')
 
         if username.lower() in logins.login_info.keys():
-            if logins.login_info[username]==password.lower():
+            if logins.login_info[username.lower()]==password.lower():
                 continued = True
                 st.success(f'Logged in as {username}')
             else:
