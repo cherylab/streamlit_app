@@ -44,7 +44,7 @@ def calc_stds(d, start_date, end_date):
 
     return df_period, mean, std_1up, std_1down, std_2up, std_2down
 
-def create_std_graph(plot_df, mean, up1, down1, up2, down2):
+def create_std_graph(plot_df, mean, up1, down1, up2, down2, show_lines):
     fig = go.Figure()
 
     fig.add_trace(go.Scatter(x=plot_df['date'],
@@ -52,51 +52,117 @@ def create_std_graph(plot_df, mean, up1, down1, up2, down2):
 
     fig.update_traces(marker=dict(size=3))
 
-    hline_color = "black"  # "#848484"
+    if show_lines:
 
-    fig.add_hline(y=mean,
-                  line_width=2,
-                  line_color=hline_color,
-                  annotation_text=f"{mean:,.2f} (mean)",
-                  annotation_position="bottom right"
-                  )
+        hline_color = "black"  # "#848484"
 
-    fig.add_hline(y=up1,
-                  line_dash="dash",
-                  line_width=1,
-                  line_color=hline_color,
-                  annotation_text=f"{up1:,.2f}",
-                  annotation_position="bottom right"
-                  )
+        fig.add_hline(y=mean,
+                      line_width=2,
+                      line_color=hline_color,
+                      annotation_text=f"{mean:,.2f} (mean)",
+                      annotation_position="bottom right"
+                      )
 
-    fig.add_hline(y=up2,
-                  line_dash="dot",  # "dash"
-                  line_width=1,
-                  line_color=hline_color,
-                  annotation_text=f"{up2:,.2f}",
-                  annotation_position="bottom right"
-                  )
+        fig.add_hline(y=up1,
+                      line_dash="dash",
+                      line_width=1,
+                      line_color=hline_color,
+                      annotation_text=f"{up1:,.2f}",
+                      annotation_position="bottom right"
+                      )
 
-    fig.add_hline(y=down1,
-                  line_dash="dash",
-                  line_width=1,
-                  line_color=hline_color,
-                  annotation_text=f"{down1:,.2f}",
-                  annotation_position="bottom right"
-                  )
+        fig.add_hline(y=up2,
+                      line_dash="dot",  # "dash"
+                      line_width=1,
+                      line_color=hline_color,
+                      annotation_text=f"{up2:,.2f}",
+                      annotation_position="bottom right"
+                      )
 
-    fig.add_hline(y=down2,
-                  line_dash="dot",  # "dash"
-                  line_width=1,
-                  line_color=hline_color,
-                  annotation_text=f"{down2:,.2f}",
-                  annotation_position="bottom right"
-                  )
+        fig.add_hline(y=down1,
+                      line_dash="dash",
+                      line_width=1,
+                      line_color=hline_color,
+                      annotation_text=f"{down1:,.2f}",
+                      annotation_position="bottom right"
+                      )
 
-    fig.update_xaxes(showgrid=False,
+        fig.add_hline(y=down2,
+                      line_dash="dot",  # "dash"
+                      line_width=1,
+                      line_color=hline_color,
+                      annotation_text=f"{down2:,.2f}",
+                      annotation_position="bottom right"
+                      )
+
+        # annotations
+        annotations = []
+
+        points = [up2, up1, mean, down1, down2]
+        labels = ["+2\u03C3", "+1\u03C3", "mean", "-1\u03C3", "-2\u03C3"]
+
+        for p, l in zip(points, labels):
+            annotations.append(dict(xref='paper',
+                                    x=1.005,
+                                    y=p,
+                                    xanchor='left',
+                                    yanchor='middle',
+                                    align='left',
+                                    text=f"{p:.2f} ({l})",
+                                    showarrow=False,
+                                    font=dict(size=12, color=hline_color)
+                                    ))
+
+        fig.update_layout(annotations=annotations)
+
+        fig.add_annotation(x=0.03,
+                           y=mean + .2,
+                           xref='paper',
+                           yref='y',
+                           xanchor='left',
+                           align='left',
+                           borderpad=5,
+                           text="Cheaper",
+                           axref='pixel',
+                           ayref='y',
+                           ax=0.25,
+                           ay=plot_df.spread.max(),
+                           arrowhead=1,
+                           arrowsize=1.,
+                           arrowside='start',
+                           arrowwidth=1.5,
+                           arrowcolor="#767676",
+                           showarrow=True,
+                           font=dict(size=15,
+                                     color="#767676"
+                                     ))
+
+        fig.add_annotation(x=0.03,
+                           y=mean - .2,
+                           xref='paper',
+                           yref='y',
+                           xanchor='left',
+                           align='left',
+                           borderpad=5,
+                           text="More Expensive",
+                           axref='pixel',
+                           ayref='y',
+                           ax=0.25,
+                           ay=np.floor(plot_df.spread.min()) - .8,
+                           arrowhead=1,
+                           arrowsize=1.,
+                           arrowside='start',
+                           arrowwidth=1.5,
+                           arrowcolor="#767676",
+                           showarrow=True,
+                           font=dict(size=15,
+                                     color="#767676"
+                                     ))
+
+    fig.update_xaxes(showgrid=False if show_lines else True, # don't show axes if show mean/stds
                      range=[plot_df.date.min(), plot_df.date.max()])
 
-    fig.update_yaxes(showgrid=False,
+    fig.update_yaxes(showgrid=False if show_lines else True, # don't show axes if show mean/stds
                      zeroline=False,
                      title='Equity Risk Premium',
                      ticksuffix="  ",
@@ -116,73 +182,10 @@ def create_std_graph(plot_df, mean, up1, down1, up2, down2):
                       #                   title_pad_b=1000
                       )
 
-    # annotations
-    annotations = []
-
-    points = [up2, up1, mean, down1, down2]
-    labels = ["+2\u03C3", "+1\u03C3", "mean", "-1\u03C3", "-2\u03C3"]
-
-    for p, l in zip(points, labels):
-        annotations.append(dict(xref='paper',
-                                x=1.005,
-                                y=p,
-                                xanchor='left',
-                                yanchor='middle',
-                                align='left',
-                                text=f"{p:.2f} ({l})",
-                                showarrow=False,
-                                font=dict(size=12, color=hline_color)
-                                ))
-
-    fig.update_layout(annotations=annotations,
-                      template=plot_settings.dockstreet_template,
-                      height=500)
-
-    fig.add_annotation(x=0.03,
-                       y=mean + .2,
-                       xref='paper',
-                       yref='y',
-                       xanchor='left',
-                       align='left',
-                       borderpad=5,
-                       text="Cheaper",
-                       axref='pixel',
-                       ayref='y',
-                       ax=0.25,
-                       ay=plot_df.spread.max(),
-                       arrowhead=1,
-                       arrowsize=1.,
-                       arrowside='start',
-                       arrowwidth=1.5,
-                       arrowcolor="#767676",
-                       showarrow=True,
-                       font=dict(size=15,
-                                 color="#767676"
-                                 ))
-
-    fig.add_annotation(x=0.03,
-                       y=mean - .2,
-                       xref='paper',
-                       yref='y',
-                       xanchor='left',
-                       align='left',
-                       borderpad=5,
-                       text="More Expensive",
-                       axref='pixel',
-                       ayref='y',
-                       ax=0.25,
-                       ay=np.floor(plot_df.spread.min())-.8,
-                       arrowhead=1,
-                       arrowsize=1.,
-                       arrowside='start',
-                       arrowwidth=1.5,
-                       arrowcolor="#767676",
-                       showarrow=True,
-                       font=dict(size=15,
-                                 color="#767676"
-                                 ))
-
     fig.update_layout(
+        template=plot_settings.dockstreet_template,
+        height=500,
+        margin=dict(b=0),
         xaxis=dict(
             rangeselector=dict(
                 y=1.05,
@@ -317,6 +320,7 @@ def create_inverse_graph(df_all):
             ser['hovertemplate'] = "%{x|%b %-d, %Y}, %{y:$,.2f}<extra></extra>"
 
     return fig
+
 # ---------------------------------------------------------------------
 # load the data from google drive
 url = "https://drive.google.com/file/d/16NBIP4qGtBkNbcxfUElMDjWiADryMa-G/view?usp=sharing"
@@ -325,7 +329,6 @@ df = pull_google_drive(url)
 # format columns
 df = reformat_df(df)
 print('max date', df.date.max())
-
 
 # FIRST PAGE
 def earnings_recalc():
@@ -349,9 +352,14 @@ def earnings_recalc():
 
     df_date_filter, m, u1, d1, u2, d2 = calc_stds(df, start_date, end_date)
 
-    updated_figure = create_std_graph(df_date_filter, m, u1, d1, u2, d2)
+    # updated_figure = create_std_graph(df_date_filter, m, u1, d1, u2, d2)
 
-    st.plotly_chart(updated_figure, use_container_width=True)
+    chart_placeholder = st.empty()
+
+    show_lines = st.checkbox('Show mean and standard deviation lines', value=True)
+
+    updated_figure = create_std_graph(df_date_filter, m, u1, d1, u2, d2, show_lines)
+    chart_placeholder.plotly_chart(updated_figure, use_container_width=True)
 
 # SECOND PAGE
 def adjuted_pe():
@@ -361,39 +369,34 @@ def adjuted_pe():
 
     st.plotly_chart(pe_figure, use_container_width=True)
 
-def login_info():
-    with st.sidebar.form(key='login_info'):
-        st.write('<b>Login</b>', unsafe_allow_html=True)
-        username = st.text_input('Username:',
+# NOT USED PAGE FOR LOGIN
+def login_info(app, key="login_info_form"):
+    with st.form(key=key):
+        col1, space, col2, space2, col3 = st.beta_columns((.05,.02,.05,.02,.04))
+        username = col1.text_input('Username:',
                                  value="",
                                  type='default')
-        password = st.text_input('Password:',
+        password = col2.text_input('Password:',
                                  value="",
                                  type='password')
         login_submit_button = st.form_submit_button('Login')
 
-        if (username in logins.login_info.keys()) & (logins.login_info[username]==password):
-            continued = True
+        if username in logins.login_info.keys():
+            if logins.login_info[username]==password:
+                continued = True
+            else:
+                continued = False
         else:
             continued = False
 
-    return continued
-
-
+    st.warning('Login info is not correct. Please try again.')
 
 def create_app_with_pages():
     # CREATE PAGES IN APP
     app = MultiApp()
-    app.add_app('Login', login_info)
-
-    valid_login = login_info()
-
-    if valid_login:
-        app.add_app("Earnings Spread Calculation", earnings_recalc)
-        app.add_app("S&P Price vs P/E Ratio", adjuted_pe)
-    else:
-        st.warning('Login info is not correct. Please try again.')
-
+    # app.add_login_app("Login", login_info(app))
+    app.add_app("Earnings Spread Calculation", earnings_recalc)
+    app.add_app("S&P Price vs P/E Ratio", adjuted_pe)
     app.run()
 
 if __name__ == '__main__':
