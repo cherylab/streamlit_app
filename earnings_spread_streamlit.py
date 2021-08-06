@@ -352,14 +352,12 @@ def earnings_recalc():
 
     df_date_filter, m, u1, d1, u2, d2 = calc_stds(df, start_date, end_date)
 
-    # updated_figure = create_std_graph(df_date_filter, m, u1, d1, u2, d2)
-
-    chart_placeholder = st.empty()
-
+    # chart_placeholder = st.empty()
+    st.write("<br>", unsafe_allow_html=True)
     show_lines = st.checkbox('Show mean and standard deviation lines', value=True)
 
     updated_figure = create_std_graph(df_date_filter, m, u1, d1, u2, d2, show_lines)
-    chart_placeholder.plotly_chart(updated_figure, use_container_width=True)
+    st.plotly_chart(updated_figure, use_container_width=True)
 
 # SECOND PAGE
 def adjuted_pe():
