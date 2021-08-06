@@ -307,7 +307,7 @@ def create_inverse_graph(df_all):
                        xanchor='left',
                        align='left',
                        borderpad=5,
-                       text=f"{df_all.inverse.values[-1]:,.0f}",
+                       text=f"{df_all.inverse.values[-1]:,.1f}",
                        showarrow=False,
                        font=dict(size=12,
                                  color=plot_settings.color_list[0])
