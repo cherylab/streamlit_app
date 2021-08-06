@@ -368,34 +368,38 @@ def adjuted_pe():
     st.plotly_chart(pe_figure, use_container_width=True)
 
 # NOT USED PAGE FOR LOGIN
-def login_info(app, key="login_info_form"):
-    with st.form(key=key):
-        col1, space, col2, space2, col3 = st.beta_columns((.05,.02,.05,.02,.04))
-        username = col1.text_input('Username:',
+def login_info(key="login_info_form"):
+    with st.sidebar.form(key=key):
+        # col1, space, col2, space2, col3, space3 = st.beta_columns((.3,.02,.3,.02,.2,.2))
+        username = st.text_input('Username:',
                                  value="",
                                  type='default')
-        password = col2.text_input('Password:',
+        password = st.text_input('Password:',
                                  value="",
                                  type='password')
         login_submit_button = st.form_submit_button('Login')
 
-        if username in logins.login_info.keys():
-            if logins.login_info[username]==password:
+        if username.lower() in logins.login_info.keys():
+            if logins.login_info[username]==password.lower():
                 continued = True
+                st.success(f'Logged in as {username}')
             else:
                 continued = False
+                st.warning('Login error. Please try again.')
         else:
             continued = False
+            st.warning('Login error. Please try again.')
 
-    st.warning('Login info is not correct. Please try again.')
+    return continued
 
 def create_app_with_pages():
     # CREATE PAGES IN APP
-    app = MultiApp()
-    # app.add_login_app("Login", login_info(app))
-    app.add_app("Earnings Spread Calculation", earnings_recalc)
-    app.add_app("S&P Price vs P/E Ratio", adjuted_pe)
-    app.run()
+    valid_login = login_info()
+    if valid_login:
+        app = MultiApp()
+        app.add_app("Earnings Spread Calculation", earnings_recalc)
+        app.add_app("S&P Price vs P/E Ratio", adjuted_pe)
+        app.run()
 
 if __name__ == '__main__':
 

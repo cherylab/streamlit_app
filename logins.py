@@ -1,4 +1,7 @@
 login_info = {
-    'evan.mcgoff':'knicks',
-    'cheryl.braus':'incubus'
+    'evan':'knicks',
+    'spencer':'newport',
+    'dan':'florida',
+    'marjan':'stanford',
+    'cheryl':'incubus'
 }
