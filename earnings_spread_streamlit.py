@@ -339,7 +339,7 @@ def earnings_recalc():
     with st.sidebar.form(key='date_form'):
         st.write('<b>Date Inputs</b>', unsafe_allow_html=True)
         start_date = st.date_input('Choose a start date',
-                                     value=datetime(2007,1,1),
+                                     value=df.date.min(),
                                      min_value=df.date.min(),
                                      max_value=df.date.max(),
                                      key='start')
