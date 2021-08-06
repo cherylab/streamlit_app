@@ -4,6 +4,6 @@ login_info = {
     'evan':'knicks',
     'spencer':'newport',
     'dan':'florida',
-    'marjan':'stanford',
+    'marjan':'stamford',
     'cheryl':'incubus'
 }
