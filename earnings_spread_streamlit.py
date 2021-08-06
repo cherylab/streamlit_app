@@ -370,25 +370,30 @@ def adjuted_pe():
 # NOT USED PAGE FOR LOGIN
 def login_info(key="login_info_form"):
     with st.sidebar.form(key=key):
-        # col1, space, col2, space2, col3, space3 = st.beta_columns((.3,.02,.3,.02,.2,.2))
+        # col1, space, col2 = st.beta_columns((.3,.02,.3))
         username = st.text_input('Username:',
                                  value="",
                                  type='default')
         password = st.text_input('Password:',
                                  value="",
                                  type='password')
-        login_submit_button = st.form_submit_button('Login')
+        col1, space, col2 = st.beta_columns((.1,.05,.3))
+        login_submit_button = col1.form_submit_button('Login')
 
         if username.lower() in logins.login_info.keys():
             if logins.login_info[username.lower()]==password.lower():
                 continued = True
-                st.success(f'Logged in as {username}')
+                col2.success(f'Login success.')
+                # col2.write('\u2713')
             else:
                 continued = False
-                st.warning('Login error. Please try again.')
+                # st.warning('Login error. Please try again.')
+                # col2.write('\u26d4')
+                col2.warning('Login error.')
         else:
             continued = False
-            st.warning('Login error. Please try again.')
+            col2.warning('Login error.')
+            # col2.write('\u26d4')
 
     return continued
 
