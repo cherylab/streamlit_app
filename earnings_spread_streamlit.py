@@ -246,6 +246,7 @@ def create_inverse_graph(df_all):
     )
 
     fig.update_layout(template=plot_settings.dockstreet_template,
+                      height=500,
                       plot_bgcolor='white',
                       hovermode='x',
                       font_family="Avenir",
@@ -260,11 +261,12 @@ def create_inverse_graph(df_all):
                           yanchor="bottom",
                           y=1,
                           xanchor="right",
-                          x=.37,
+                          x=.28,
                           font=dict(size=14)
                       ))
 
-    fig.update_yaxes(title_text="<b>S&P Price</b>",
+    fig.update_yaxes(title_text="S&P Price",
+                     titlefont_size=18,
                      color="#767676",
                      tickcolor="#767676",
                      tickfont_color="#767676",
@@ -275,7 +277,8 @@ def create_inverse_graph(df_all):
                      title_standoff=20,
                      secondary_y=True)
 
-    fig.update_yaxes(title_text="<b>Bond Adjusted P/E</b>",
+    fig.update_yaxes(title_text="Bond Adjusted P/E",
+                     titlefont_size=18,
                      color=plot_settings.color_list[0],
                      tickcolor=plot_settings.color_list[0],
                      tickfont_color=plot_settings.color_list[0],
